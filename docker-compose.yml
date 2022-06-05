@@ -1,0 +1,35 @@
+version: "3.7"
+services:
+  alpha:
+    image: "scylladb/scylla:4.6.2"
+    networks: 
+      scylla_bridge:
+        aliases:
+          - argus-alpha
+    command: --smp 2 --overprovisioned 1
+    volumes:
+      - ./alpha-data:/var/lib/scylla/data:rw
+      - ./alpha-config:/etc/scylla:rw
+  bravo:
+    image: "scylladb/scylla:4.6.2"
+    networks: 
+      scylla_bridge:
+    depends_on: 
+      - alpha
+    command: --smp 2 --overprovisioned 1 --seeds="argus-alpha"
+    volumes:
+      - ./bravo-data:/var/lib/scylla/data:rw
+      - ./bravo-config:/etc/scylla:rw
+  charlie: 
+    image: "scylladb/scylla:4.6.2"
+    networks: 
+      scylla_bridge:
+    depends_on: 
+      - alpha
+    command: --smp 2 --overprovisioned 1 --seeds="argus-alpha"
+    volumes:
+      - ./charlie-data:/var/lib/scylla/data:rw
+      - ./charlie-config:/etc/scylla:rw
+networks:
+  scylla_bridge:
+    driver: bridge
