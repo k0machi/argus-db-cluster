@@ -1,35 +1,48 @@
 version: "3.7"
 services:
   alpha:
-    image: "scylladb/scylla:4.6.2"
+    image: "scylladb/scylla:4.6.3"
     networks: 
       scylla_bridge:
+        ipv4_address: 172.18.0.2
         aliases:
           - argus-alpha
     command: --smp 2 --overprovisioned 1
+    ports:
+      - 19042:9042/tcp
     volumes:
       - ./alpha-data:/var/lib/scylla/data:rw
       - ./alpha-config:/etc/scylla:rw
   bravo:
-    image: "scylladb/scylla:4.6.2"
+    image: "scylladb/scylla:4.6.3"
     networks: 
       scylla_bridge:
+        ipv4_address: 172.18.0.3
     depends_on: 
       - alpha
     command: --smp 2 --overprovisioned 1 --seeds="argus-alpha"
+    ports:
+      - 29042:9042/tcp
     volumes:
       - ./bravo-data:/var/lib/scylla/data:rw
       - ./bravo-config:/etc/scylla:rw
   charlie: 
-    image: "scylladb/scylla:4.6.2"
+    image: "scylladb/scylla:4.6.3"
     networks: 
       scylla_bridge:
+        ipv4_address: 172.18.0.4
     depends_on: 
       - alpha
     command: --smp 2 --overprovisioned 1 --seeds="argus-alpha"
+    ports:
+      - 39042:9042/tcp
     volumes:
       - ./charlie-data:/var/lib/scylla/data:rw
       - ./charlie-config:/etc/scylla:rw
 networks:
   scylla_bridge:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.18.0.0/24
+          gateway: 172.18.0.1
