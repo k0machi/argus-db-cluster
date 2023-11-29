@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   alpha:
-    image: "scylladb/scylla:4.6.3"
+    image: "scylladb/scylla:5.2.10"
     networks: 
       scylla_bridge:
         ipv4_address: 172.18.0.2
@@ -14,7 +14,7 @@ services:
       - ./alpha-data:/var/lib/scylla/data:rw
       - ./alpha-config:/etc/scylla:rw
   bravo:
-    image: "scylladb/scylla:4.6.3"
+    image: "scylladb/scylla:5.2.10"
     networks: 
       scylla_bridge:
         ipv4_address: 172.18.0.3
@@ -27,7 +27,7 @@ services:
       - ./bravo-data:/var/lib/scylla/data:rw
       - ./bravo-config:/etc/scylla:rw
   charlie: 
-    image: "scylladb/scylla:4.6.3"
+    image: "scylladb/scylla:5.2.10"
     networks: 
       scylla_bridge:
         ipv4_address: 172.18.0.4
